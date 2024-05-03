@@ -1,0 +1,42 @@
+logging:
+  receivers:
+    json-log-receiver:
+      type: files
+      include_paths:
+        - /tmp/myapp/webapp.log
+  processors:
+    json-log-processor:
+      type: parse_json
+      time_key: time
+      time_format: '%Y-%m-%d %H:%M:%S.%L'
+    modify_fields:
+      type: modify_fields
+      fields:
+        severity:
+          copy_from: jsonPayload.severity
+  service:
+    pipelines:
+      default_pipeline:
+        receivers: [json-log-receiver]
+        processors: [json-log-processor, modify_fields]
+
+# original
+#logging:
+#  receivers:
+#    spring-app-receiver:
+#      type: files
+#      include_paths:
+#        - /tmp/myapp/webapp.log
+#      record_log_file_path: true
+#  processors:
+#    spring-app-processor:
+#      type: parse_json
+#      time_key: time
+#      time_format: '%Y-%m-%dT%H:%M:%S.%L%Z'
+#  service:
+#    pipelines:
+#      default_pipeline:
+#        receivers: [spring-app-receiver]
+#        processors: [spring-app-processor]
+
+

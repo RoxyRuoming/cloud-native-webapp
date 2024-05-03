@@ -1,0 +1,44 @@
+name: Packer CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  packer_fmt_and_validate:
+    name: Packer Format and Validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          packer_version: '1.10.0'
+
+      - name: Initialize Packer
+        run: packer init .
+
+      - name: Packer Format
+        run: packer fmt -check .
+        id: fmt
+
+      - name: List scripts directory contents
+        run: ls -al scripts/
+
+      - name: Create Placeholder for Artifact
+        run: |
+          FILE="artifact/healthcheck-0.0.1-SNAPSHOT.jar"
+          if [ ! -f "$FILE" ]; then
+              echo "Creating placeholder for $FILE"
+              mkdir -p $(dirname "$FILE") && touch "$FILE"
+          fi
+
+      - name: Packer Validate
+        run: packer validate .
+  

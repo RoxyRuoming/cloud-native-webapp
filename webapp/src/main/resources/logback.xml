@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<appender name="jsonAppender" class="ch.qos.logback.core.FileAppender">
+  <file>/tmp/myapp/webapp.log</file>
+  <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+    <prettyPrint>true</prettyPrint>
+    <providers>
+      <pattern>
+        <pattern>
+          {
+          "time": "%date{yyyy-MM-dd HH:mm:ss.SSS}",
+          "severity": "%level",
+          "file": "%file",
+          "line": "%line",
+          "message": "%message"
+          }
+        </pattern>
+      </pattern>
+      <fieldNames>
+        <levelFieldName>severity</levelFieldName>
+      </fieldNames>
+    </providers>
+  </encoder>
+</appender>
+
+<root level="INFO">
+  <appender-ref ref="jsonAppender"/>
+</root>
+</configuration>
+
+<!--original-->
+<!--<configuration>-->
+
+<!--  <appender name="fileAppender" class="ch.qos.logback.core.FileAppender">-->
+<!--    <file>/tmp/myapp/webapp.log</file>-->
+<!--    <append>true</append>-->
+<!--    <encoder>-->
+<!--      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+<!--    </encoder>-->
+<!--  </appender>-->
+
+<!--  <root level="info">-->
+<!--    <appender-ref ref="fileAppender" />-->
+<!--  </root>-->
+
+<!--</configuration>-->
